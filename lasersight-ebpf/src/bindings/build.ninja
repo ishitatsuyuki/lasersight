@@ -1,0 +1,14 @@
+aya_gen = aya-gen
+module = vmlinux
+
+rule aya-gen
+  command = $aya_gen btf-types --btf /sys/kernel/btf/$module $functions > $out
+
+build amdgpu.rs: aya-gen
+  functions = trace_event_raw_amdgpu_cs_ioctl $
+              trace_event_raw_amdgpu_vm_flush $
+              trace_event_raw_amdgpu_sched_run_job
+  module = amdgpu
+
+build sched.rs: aya-gen
+  functions = trace_event_raw_sched_switch
